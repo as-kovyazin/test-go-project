@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"iSpringTest/config"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 
 type Server struct {
 	config *config.Config
+	router *mux.Router
 }
 
 func MakeServer(confPath string) *Server {
@@ -17,13 +19,14 @@ func MakeServer(confPath string) *Server {
 	s := &Server{
 		config: conf,
 	}
+	s.router = s.NewRouter()
 
 	return s
 }
 
 func (s *Server) Run() {
 	addr := fmt.Sprint("[::]:", s.config.ApiPort)
-	err := http.ListenAndServe(addr, nil)
+	err := http.ListenAndServe(addr, s.router)
 	if err != nil {
 		log.Fatal("Error to load server: ", err)
 	}
