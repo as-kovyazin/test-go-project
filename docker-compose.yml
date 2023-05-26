@@ -23,7 +23,7 @@ services:
       args:
         apiPort: ${API_PORT}
     volumes:
-      - ./cmd:/app
+      - ./cmd:/app/cmd
     networks:
       - net
     depends_on:
