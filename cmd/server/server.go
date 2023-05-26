@@ -25,6 +25,8 @@ func MakeServer(confPath string) *Server {
 	}
 	s.router = s.NewRouter()
 
+	http.Handle("/", s.router)
+
 	return s
 }
 
