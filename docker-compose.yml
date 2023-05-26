@@ -3,6 +3,8 @@ version: '3.5'
 services:
 
   postgres:
+    env_file:
+      - ./.env
     container_name: postgres
     image: postgres
     environment:
@@ -18,6 +20,8 @@ services:
       - net
 
   app:
+    env_file:
+      - ./.env
     build:
       context: ./cmd
       args:

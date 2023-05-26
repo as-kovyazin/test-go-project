@@ -32,8 +32,9 @@ func MakeServer(confPath string) *Server {
 
 func (s *Server) Run() {
 	addr := fmt.Sprint("[::]:", s.config.ApiPort)
+	log.Println("server up")
 	err := http.ListenAndServe(addr, s.router)
 	if err != nil {
-		log.Fatal("Error to load server: ", err)
+		log.Fatalf("Error to load server: %f", err)
 	}
 }
