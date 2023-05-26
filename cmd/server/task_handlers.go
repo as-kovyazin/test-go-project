@@ -34,7 +34,7 @@ func (s *Server) updateTask(w http.ResponseWriter, r *http.Request) {
 
 	err = models.CompleteTask(id, s.database)
 	if err == models.NotFoundByIdError {
-		JsonResponse404(w)
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
 		return
 	}
 	if err != nil {
@@ -64,7 +64,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 
 	err = models.DeleteTask(id, s.database)
 	if err == models.NotFoundByIdError {
-		JsonResponse404(w)
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
 		return
 	}
 	if err != nil {
@@ -94,7 +94,7 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 
 	task, err := models.GetTask(id, s.database)
 	if err == models.NotFoundByIdError {
-		JsonResponse404(w)
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
 		return
 	}
 	if err != nil {

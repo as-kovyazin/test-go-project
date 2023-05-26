@@ -35,6 +35,6 @@ func (s *Server) Run() {
 	log.Println("server up")
 	err := http.ListenAndServe(addr, s.router)
 	if err != nil {
-		log.Fatalf("Error to load server: %f", err)
+		log.Fatal("Error to load server: ", err)
 	}
 }
