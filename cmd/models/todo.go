@@ -60,3 +60,20 @@ func CompleteTodo(id int64, db *bun.DB) error {
 	}
 	return nil
 }
+
+func DeleteTodo(id int64, db *bun.DB) error {
+	ctx := context.Background()
+
+	todo, err := database.FindTodoById(id, db, ctx)
+	if err == sql.ErrNoRows {
+		return errors.New("not found by ID")
+	}
+	if err != nil {
+		return err
+	}
+
+	if _, err := todo.Delete(db, context.Background()); err != nil {
+		return err
+	}
+	return nil
+}

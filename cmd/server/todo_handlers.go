@@ -51,7 +51,18 @@ func (s *Server) getUncompletedTodos(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) deleteTodo(w http.ResponseWriter, r *http.Request) {
+	id, err := getRequestIntVal("id", r)
+	if err != nil {
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
 
+	if err := models.DeleteTodo(id, s.database); err != nil {
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
+
+	JsonResponse200(w)
 }
 
 func (s *Server) getCompletedTodo(w http.ResponseWriter, r *http.Request) {
