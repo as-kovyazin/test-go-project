@@ -22,6 +22,10 @@ func AddTodo(requestTodo RequestTodo, db *bun.DB) (*database.Todo, error) {
 		return nil, errors.New("text of task too long")
 	}
 
+	if utf8.RuneCount([]byte(text)) == 0 {
+		return nil, errors.New("text of task is empty")
+	}
+
 	dbTodo := database.Todo{
 		Text:      text,
 		CreatedAt: time.Now().Unix(),
@@ -42,6 +46,10 @@ func CompleteTodo(id int64, db *bun.DB) error {
 	}
 	if err != nil {
 		return err
+	}
+
+	if todo.IsCompleted == true {
+		return errors.New("task already completed")
 	}
 
 	todo.CompletedAt = time.Now().Unix()
