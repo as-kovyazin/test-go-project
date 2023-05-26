@@ -1,0 +1,5 @@
+{
+  "ApiPort": 3000,
+  "PostgresURL": "postgres://user:password@postgres:5432/ispring-test?sslmode=disable",
+  "BunDebug": false
+}
