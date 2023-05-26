@@ -19,21 +19,22 @@ services:
     networks:
       - net
 
-  app:
-    env_file:
-      - ./.env
-    build:
-      context: ./cmd
-      args:
-        apiPort: ${API_PORT}
-    volumes:
-      - ./cmd:/app/cmd
-    ports:
-      - ${API_PORT}:${API_PORT}
-    networks:
-      - net
-    depends_on:
-      - postgres
+#  app:
+#    env_file:
+#      - ./.env
+#    build:
+#      context: ./cmd
+#      args:
+#        apiPort: ${API_PORT}
+#    volumes:
+#      - ./cmd:/app/cmd
+#      - ./go:/go
+#    ports:
+#      - ${API_PORT}:${API_PORT}
+#    networks:
+#      - net
+#    depends_on:
+#      - postgres
 
 networks:
   net:

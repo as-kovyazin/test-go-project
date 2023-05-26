@@ -6,6 +6,12 @@
 docker-compose up
 ```
 
+Мануал по мигарции:
+
+https://github.com/uptrace/bun/tree/master/example/migrate
+
+### Задание:
+
 Разработать сервис “Todo list”, который позволяет вести список задач.
 
 Должны поддерживаться следующие операции:
