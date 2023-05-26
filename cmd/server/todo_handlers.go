@@ -1,6 +1,8 @@
 package server
 
 import (
+	"context"
+	"iSpringTest/database"
 	"iSpringTest/models"
 	"net/http"
 )
@@ -20,7 +22,7 @@ func (s *Server) addTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonResponse200WithBody(w, Todo{ID: todo.ID, Text: todo.Text, CreatedAt: todo.CreatedAt})
+	JsonResponse200WithBody(w, ResponseTodo{ID: todo.ID, Text: todo.Text, CreatedAt: todo.CreatedAt})
 }
 
 func (s *Server) completeTodo(w http.ResponseWriter, r *http.Request) {
@@ -38,8 +40,14 @@ func (s *Server) completeTodo(w http.ResponseWriter, r *http.Request) {
 	JsonResponse200(w)
 }
 
-func (s *Server) getUncompletedTodo(w http.ResponseWriter, r *http.Request) {
+func (s *Server) getUncompletedTodos(w http.ResponseWriter, r *http.Request) {
+	todos, err := database.FindUncompletedTodos(s.database, context.Background())
+	if err != nil {
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
 
+	JsonResponse200WithBody(w, getResponseTodoList(todos))
 }
 
 func (s *Server) deleteTodo(w http.ResponseWriter, r *http.Request) {
@@ -47,5 +55,19 @@ func (s *Server) deleteTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getCompletedTodo(w http.ResponseWriter, r *http.Request) {
+	todos, err := database.FindCompletedTodos(s.database, context.Background())
+	if err != nil {
+		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
 
+	JsonResponse200WithBody(w, getResponseTodoList(todos))
+}
+
+func getResponseTodoList(todos []database.Todo) ResponseTodoList {
+	responseTodos := make([]ResponseTodo, 0)
+	for _, todo := range todos {
+		responseTodos = append(responseTodos, ResponseTodo{ID: todo.ID, Text: todo.Text, CreatedAt: todo.CreatedAt})
+	}
+	return ResponseTodoList{Todos: responseTodos}
 }

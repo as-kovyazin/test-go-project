@@ -19,6 +19,20 @@ func FindTodoById(id int64, db *bun.DB, ctx context.Context) (todo Todo, err err
 	return
 }
 
+func FindUncompletedTodos(db *bun.DB, ctx context.Context) (todos []Todo, err error) {
+	if err = db.NewSelect().Model(&todos).Where("? = ?", bun.Ident("is_completed"), false).Scan(ctx); err != nil {
+		return
+	}
+	return
+}
+
+func FindCompletedTodos(db *bun.DB, ctx context.Context) (todos []Todo, err error) {
+	if err = db.NewSelect().Model(&todos).Where("? = ?", bun.Ident("is_completed"), true).Scan(ctx); err != nil {
+		return
+	}
+	return
+}
+
 func (todo *Todo) Insert(db *bun.DB, ctx context.Context) (sql.Result, error) {
 	return db.NewInsert().Model(todo).Exec(ctx)
 }

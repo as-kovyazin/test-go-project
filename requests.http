@@ -7,4 +7,16 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/todo/complete/3
+POST http://localhost:3000/todo/complete/1
+
+###
+
+GET http://localhost:3000/todo/uncompleted
+
+###
+
+GET http://localhost:3000/todo/completed
+
+###
+
+DELETE http://localhost:3000/todo/delete/1

@@ -9,10 +9,14 @@ type RequestErr struct {
 	Error string `json:"error"`
 }
 
-type Todo struct {
+type ResponseTodo struct {
 	ID        int64  `json:"id"`
 	Text      string `json:"text"`
 	CreatedAt int64  `json:"createdAt"`
+}
+
+type ResponseTodoList struct {
+	Todos []ResponseTodo `json:"todos"`
 }
 
 func JsonResponse200(w http.ResponseWriter) {
