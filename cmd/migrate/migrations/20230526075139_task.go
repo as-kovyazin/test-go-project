@@ -9,7 +9,7 @@ import (
 
 func init() {
 	Migrations.MustRegister(func(ctx context.Context, db *bun.DB) error {
-		if _, err := db.NewCreateTable().Model((*database.Todo)(nil)).Exec(ctx); err != nil {
+		if _, err := db.NewCreateTable().Model((*database.Task)(nil)).Exec(ctx); err != nil {
 			return err
 		}
 		return nil

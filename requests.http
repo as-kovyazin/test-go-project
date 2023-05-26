@@ -1,4 +1,4 @@
-PUT http://localhost:3000/todo/add
+PUT http://localhost:3000/task
 Content-Type: application/json
 
 {
@@ -6,17 +6,16 @@ Content-Type: application/json
 }
 
 ###
-
-POST http://localhost:3000/todo/complete/1
-
-###
-
-GET http://localhost:3000/todo/uncompleted
+GET http://localhost:3000/task/1
 
 ###
-
-GET http://localhost:3000/todo/completed
+POST http://localhost:3000/task/1
 
 ###
+DELETE http://localhost:3000/task/1
 
-DELETE http://localhost:3000/todo/delete/1
+###
+GET http://localhost:3000/task/uncompleted
+
+###
+GET http://localhost:3000/task/completed

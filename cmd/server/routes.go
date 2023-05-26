@@ -15,10 +15,11 @@ type Routes []Route
 
 func (s *Server) GetRoutes() []Route {
 	return Routes{
-		Route{"todo_add", "PUT", "/todo/add", s.addTodo},
-		Route{"todo_complete", "POST", "/todo/complete/{id:[0-9]+}", s.completeTodo},
-		Route{"todo_delete", "DELETE", "/todo/delete/{id:[0-9]+}", s.deleteTodo},
-		Route{"todo_get_uncompleted", "GET", "/todo/uncompleted", s.getUncompletedTodos},
-		Route{"todo_get_completed", "GET", "/todo/completed", s.getCompletedTodo},
+		Route{"task_add", "PUT", "/task", s.addTask},
+		Route{"task_complete", "POST", "/task/{id:[0-9]+}", s.updateTask},
+		Route{"task_delete", "DELETE", "/task/{id:[0-9]+}", s.deleteTask},
+		Route{"task_get", "GET", "/task/{id:[0-9]+}", s.getTask},
+		Route{"get_uncompleted_task", "GET", "/task/uncompleted", s.getUncompletedTasks},
+		Route{"get_completed_task", "GET", "/task/completed", s.getCompletedTasks},
 	}
 }

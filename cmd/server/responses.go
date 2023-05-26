@@ -9,14 +9,14 @@ type RequestErr struct {
 	Error string `json:"error"`
 }
 
-type ResponseTodo struct {
+type ResponseTask struct {
 	ID        int64  `json:"id"`
 	Text      string `json:"text"`
 	CreatedAt int64  `json:"createdAt"`
 }
 
-type ResponseTodoList struct {
-	Todos []ResponseTodo `json:"todos"`
+type ResponseTaskList struct {
+	Tasks []ResponseTask `json:"tasks"`
 }
 
 func JsonResponse200(w http.ResponseWriter) {
@@ -29,6 +29,10 @@ func JsonResponse200WithBody(w http.ResponseWriter, rawJson any) {
 
 func JsonResponse201(w http.ResponseWriter) {
 	JsonResponse(w, http.StatusCreated, nil)
+}
+
+func JsonResponse400WithBody(w http.ResponseWriter, rawJson any) {
+	JsonResponse(w, http.StatusBadRequest, rawJson)
 }
 
 func JsonResponse404(w http.ResponseWriter) {
