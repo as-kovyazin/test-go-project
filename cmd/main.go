@@ -1,7 +1,10 @@
 package main
 
-import "log"
+import (
+	"iSpringTest/server"
+)
 
 func main() {
-	log.Println("app started")
+	serv := server.MakeServer("config.json")
+	serv.Run()
 }
