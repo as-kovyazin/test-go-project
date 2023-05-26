@@ -4,3 +4,7 @@ Content-Type: application/json
 {
   "text": "test_text"
 }
+
+###
+
+POST http://localhost:3000/todo/complete/3

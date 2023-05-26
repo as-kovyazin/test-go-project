@@ -5,6 +5,16 @@ import (
 	"net/http"
 )
 
+type RequestErr struct {
+	Error string `json:"error"`
+}
+
+type Todo struct {
+	ID        int64  `json:"id"`
+	Text      string `json:"text"`
+	CreatedAt int64  `json:"createdAt"`
+}
+
 func JsonResponse200(w http.ResponseWriter) {
 	JsonResponse(w, http.StatusOK, nil)
 }

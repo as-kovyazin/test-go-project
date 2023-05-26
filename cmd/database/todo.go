@@ -8,8 +8,15 @@ import (
 
 type Todo struct {
 	ID          int64 `bun:",pk,autoincrement"`
+	CreatedAt   int64
 	Text        string
 	IsCompleted bool
+	CompletedAt int64
+}
+
+func FindTodoById(id int64, db *bun.DB, ctx context.Context) (todo Todo, err error) {
+	err = db.NewSelect().Model(&todo).Where("? = ?", bun.Ident("id"), id).Scan(ctx)
+	return
 }
 
 func (todo *Todo) Insert(db *bun.DB, ctx context.Context) (sql.Result, error) {
