@@ -19,22 +19,24 @@ services:
     networks:
       - net
 
-#  app:
-#    env_file:
-#      - ./.env
-#    build:
-#      context: ./cmd
-#      args:
-#        apiPort: ${API_PORT}
-#    volumes:
-#      - ./cmd:/app/cmd
-#      - ./go:/go
-#    ports:
-#      - ${API_PORT}:${API_PORT}
-#    networks:
-#      - net
-#    depends_on:
-#      - postgres
+  app:
+    env_file:
+      - ./.env
+    build:
+      context: ./cmd
+      args:
+        apiPort: ${API_PORT}
+    environment:
+      POSTGRES_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${DATABASE_NAME}?sslmode=disable
+    volumes:
+      - ./cmd:/app/cmd
+      - ./go:/go
+    ports:
+      - ${API_PORT}:${API_PORT}
+    networks:
+      - net
+    depends_on:
+      - postgres
 
 networks:
   net:
