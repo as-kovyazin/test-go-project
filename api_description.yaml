@@ -1,0 +1,160 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'Sample API'
+  description: REST-API для todo list
+
+servers:
+  - url: http://10.20.31.140:3000
+    description: default server
+
+paths:
+  /task:
+    put:
+      summary: Create a task
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                text:
+                  description: description of task - limit 1000 symbols
+                  type: string
+              required:
+                - text
+      responses:
+        '200':
+          description: The task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/{taskId}:
+    parameters:
+      - name: taskId
+        description: The unique identifier of the task
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/taskId'
+    get:
+      summary: Read a task
+      responses:
+        '200':
+          description: The task found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+        404:
+          description: No task found for the provided `taskId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Complete a task
+      responses:
+        200:
+          description: The task completed
+        404:
+          description: No task found for the provided `taskId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a task
+      responses:
+        '200':
+          description: The task deleted
+        404:
+          description: No task found for the provided `taskId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/uncompleted:
+    get:
+      summary: Получить список незавершенных задач
+      responses:
+        200:
+          description: получен список задач
+          content:
+            application:json:
+              schema:
+                $ref: '#/components/schemas/tasks'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /task/completed:
+    get:
+      summary: Получить список завершенных задач
+      responses:
+        200:
+          description: получен список задач
+          content:
+            application:json:
+              schema:
+                $ref: '#/components/schemas/tasks'
+        400:
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    taskId:
+      description: The unique identifier of a taskId
+      type: integer
+    task:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/taskId'
+        text:
+          type: string
+        created_at:
+          type: integer
+    tasks:
+      type: object
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/task'
+    Error:
+      type: object
+      properties:
+        error:
+          description: A human readable error message
+          type: string
