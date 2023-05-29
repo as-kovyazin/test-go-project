@@ -34,7 +34,15 @@ func getRequestIntVal(param string, r *http.Request) (int64, error) {
 func getResponseTaskList(tasks []database.Task) ResponseTaskList {
 	responseTasks := make([]ResponseTask, 0)
 	for _, task := range tasks {
-		responseTasks = append(responseTasks, ResponseTask{ID: task.ID, Text: task.Text, CreatedAt: task.CreatedAt})
+		responseTasks = append(responseTasks, GetResponseTask(&task))
 	}
 	return ResponseTaskList{Tasks: responseTasks}
+}
+
+func GetResponseTask(task *database.Task) ResponseTask {
+	return ResponseTask{
+		ID:        task.ID,
+		Text:      task.Text,
+		CreatedAt: task.CreatedAt,
+	}
 }

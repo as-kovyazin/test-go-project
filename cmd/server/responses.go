@@ -43,6 +43,10 @@ func JsonResponse404WithBody(w http.ResponseWriter, rawJson any) {
 	JsonResponse(w, http.StatusNotFound, rawJson)
 }
 
+func JsonResponse500(w http.ResponseWriter) {
+	JsonResponse(w, http.StatusInternalServerError, nil)
+}
+
 func JsonResponse(w http.ResponseWriter, statusCode int, rawJson any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
