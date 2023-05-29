@@ -2,13 +2,12 @@ package server
 
 import (
 	"context"
-	"iSpringTest/database"
-	"iSpringTest/models"
+	"iSpringTest/services"
 	"net/http"
 )
 
 func (s *Server) addTask(w http.ResponseWriter, r *http.Request) {
-	var payload models.RequestTask
+	var payload services.RequestTask
 	err := getJsonBody(r, &payload)
 
 	if err != nil {
@@ -16,13 +15,21 @@ func (s *Server) addTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := models.AddTask(payload, s.database)
+	service := services.Task{
+		Repository: s.taskRepository,
+	}
+
+	task, err := service.AddTask(payload)
+	if err == services.DatabaseError {
+		JsonResponse500(w)
+		return
+	}
 	if err != nil {
 		JsonResponse400WithBody(w, RequestErr{Error: err.Error()})
 		return
 	}
 
-	JsonResponse200WithBody(w, ResponseTask{ID: task.ID, Text: task.Text, CreatedAt: task.CreatedAt})
+	JsonResponse200WithBody(w, GetResponseTask(task))
 }
 
 func (s *Server) updateTask(w http.ResponseWriter, r *http.Request) {
@@ -32,9 +39,17 @@ func (s *Server) updateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.CompleteTask(id, s.database)
-	if err == models.NotFoundByIdError {
+	service := services.Task{
+		Repository: s.taskRepository,
+	}
+
+	err = service.CompleteTask(id)
+	if err == services.NotFoundByIdError {
 		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
+	if err == services.DatabaseError {
+		JsonResponse500(w)
 		return
 	}
 	if err != nil {
@@ -46,9 +61,9 @@ func (s *Server) updateTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getUncompletedTasks(w http.ResponseWriter, r *http.Request) {
-	tasks, err := database.FindUncompletedTasks(s.database, context.Background())
+	tasks, err := s.taskRepository.FindUncompletedTasks(context.Background())
 	if err != nil {
-		JsonResponse400WithBody(w, RequestErr{Error: err.Error()})
+		JsonResponse500(w)
 		return
 	}
 
@@ -62,9 +77,17 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.DeleteTask(id, s.database)
-	if err == models.NotFoundByIdError {
+	service := services.Task{
+		Repository: s.taskRepository,
+	}
+
+	err = service.DeleteTask(id)
+	if err == services.NotFoundByIdError {
 		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
+		return
+	}
+	if err == services.DatabaseError {
+		JsonResponse500(w)
 		return
 	}
 	if err != nil {
@@ -76,7 +99,7 @@ func (s *Server) deleteTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) getCompletedTasks(w http.ResponseWriter, r *http.Request) {
-	tasks, err := database.FindCompletedTasks(s.database, context.Background())
+	tasks, err := s.taskRepository.FindCompletedTasks(context.Background())
 	if err != nil {
 		JsonResponse400WithBody(w, RequestErr{Error: err.Error()})
 		return
@@ -92,8 +115,12 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	task, err := models.GetTask(id, s.database)
-	if err == models.NotFoundByIdError {
+	service := services.Task{
+		Repository: s.taskRepository,
+	}
+
+	task, err := service.GetTask(id)
+	if err == services.NotFoundByIdError {
 		JsonResponse404WithBody(w, RequestErr{Error: err.Error()})
 		return
 	}
@@ -102,5 +129,5 @@ func (s *Server) getTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	JsonResponse200WithBody(w, ResponseTask{ID: task.ID, Text: task.Text, CreatedAt: task.CreatedAt})
+	JsonResponse200WithBody(w, GetResponseTask(task))
 }

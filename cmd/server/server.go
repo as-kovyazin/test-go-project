@@ -3,25 +3,25 @@ package server
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/uptrace/bun"
 	"iSpringTest/config"
 	"iSpringTest/database"
+	"iSpringTest/repositories"
 	"log"
 	"net/http"
 )
 
 type Server struct {
-	config   *config.Config
-	router   *mux.Router
-	database *bun.DB
+	config         *config.Config
+	router         *mux.Router
+	taskRepository *repositories.Task
 }
 
 func MakeServer(confPath string) *Server {
 	conf := config.Load(confPath)
-
+	db := database.Init(conf.PostgresURL, conf.DebugDb)
 	s := &Server{
-		config:   conf,
-		database: database.Init(conf.PostgresURL, conf.DebugDb),
+		config:         conf,
+		taskRepository: repositories.CreateTaskRepository(db),
 	}
 	s.router = s.NewRouter()
 
